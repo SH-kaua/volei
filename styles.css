@@ -1,36 +1,143 @@
 styles.css
-/* ... (Seções anteriores de CSS permanecem as mesmas) ... */
+/* Paleta de Cores: #000 (Preto) e #FF0000 (Vermelho) */
 
-/* --- Área de Dúvidas/Penalidades --- */
-#duvidas-penalidades-section {
+body {
+    font-family: sans-serif;
+    background-color: #000; /* Fundo preto */
+    color: #fff; /* Texto branco padrão */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    background-color: #1a1a1a;
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 3px solid #FF0000; /* Destaque vermelho */
+}
+
+main {
+    padding: 20px;
+    width: 90%;
+    max-width: 900px;
+}
+
+section {
+    margin-bottom: 40px;
+    padding: 20px;
+    background-color: #111; /* Cor de fundo escura para seções */
+    border-radius: 8px;
+    border: 1px solid #333;
+}
+
+h1, h2, h3 {
+    color: #FF0000; /* Títulos em vermelho */
     text-align: center;
 }
 
-#select-penalidade {
-    padding: 10px;
-    font-size: 1em;
-    margin: 15px 0;
-    width: 80%;
-    max-width: 400px;
-    background-color: #333;
-    color: #fff;
-    border: 1px solid #FF0000;
-    border-radius: 5px;
+/* --- Área de Pontuação --- */
+#placar-section {
+    text-align: center;
 }
 
-.detalhe-penalidade {
+#placar {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
     margin-top: 20px;
-    padding: 15px;
-    text-align: left;
-    background-color: #0a0a0a;
-    border: 1px solid #FF0000;
-    border-radius: 5px;
-    min-height: 100px; /* Garante que a caixa não encolha demais */
 }
 
-.detalhe-penalidade h4 {
+.time {
+    background-color: #222;
+    padding: 20px;
+    border-radius: 8px;
+    width: 45%;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); /* Sombra vermelha */
+    position: relative;
+}
+
+.pontuacao {
+    display: block;
+    font-size: 4em;
+    font-weight: bold;
     color: #FF0000;
-    margin-top: 0;
+    margin: 10px 0;
 }
 
-/* ... (O restante do CSS permanece o mesmo) ... */
+.botao-ponto {
+    background-color: #FF0000;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.1em;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    font-weight: bold;
+}
+
+.botao-ponto:hover {
+    background-color: #e60000;
+}
+
+.saque-indicador {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background-color: #FF0000;
+    color: #000;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.8em;
+    display: none; /* Inicialmente escondido */
+}
+
+.saque {
+    display: block !important; /* Mostra o indicador de saque */
+}
+
+#info-geral {
+    margin-top: 30px;
+    padding: 15px;
+    background-color: #0a0a0a;
+    border-radius: 5px;
+}
+
+#info-geral button {
+    margin-top: 10px;
+    background-color: #555;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* --- Área de Regras --- */
+#regras-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#regras-section li {
+    background-color: #222;
+    margin: 10px 0;
+    padding: 10px;
+    border-left: 5px solid #FF0000;
+    border-radius: 3px;
+}
+
+/* --- Rodapé --- */
+footer {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #1a1a1a;
+    margin-top: 20px;
+    border-top: 1px solid #FF0000;
+}
