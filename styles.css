@@ -1,0 +1,36 @@
+styles.css
+/* ... (Seções anteriores de CSS permanecem as mesmas) ... */
+
+/* --- Área de Dúvidas/Penalidades --- */
+#duvidas-penalidades-section {
+    text-align: center;
+}
+
+#select-penalidade {
+    padding: 10px;
+    font-size: 1em;
+    margin: 15px 0;
+    width: 80%;
+    max-width: 400px;
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #FF0000;
+    border-radius: 5px;
+}
+
+.detalhe-penalidade {
+    margin-top: 20px;
+    padding: 15px;
+    text-align: left;
+    background-color: #0a0a0a;
+    border: 1px solid #FF0000;
+    border-radius: 5px;
+    min-height: 100px; /* Garante que a caixa não encolha demais */
+}
+
+.detalhe-penalidade h4 {
+    color: #FF0000;
+    margin-top: 0;
+}
+
+/* ... (O restante do CSS permanece o mesmo) ... */
