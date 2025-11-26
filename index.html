@@ -9,6 +9,13 @@ index.html
 </head>
 <body>
 
+    <div id="overlay-vencedor">
+        <div id="mensagem-vencedor">
+            <h2>🏆 <span id="time-vencedor">Time Vencedor</span> Ganhou o Set! 🏆</h2>
+            <p id="contador-tempo">Reiniciando em 02:00...</p>
+        </div>
+    </div>
+
     <header>
         <h1>🏐 Vôlei - Marcador de Pontos 🏐</h1>
     </header>
@@ -41,6 +48,25 @@ index.html
                 <p>Sets Ganhos A: <span id="setsA">0</span> | Sets Ganhos B: <span id="setsB">0</span></p>
                 <button onclick="resetarPlacar()">Resetar Tudo</button>
             </div>
+        </section>
+
+        <hr>
+
+        <section id="duvidas-penalidades-section">
+            <h2>❓ Dúvidas sobre Penalidades e Faltas</h2>
+            <p>Selecione um tópico para ver a regra correspondente:</p>
+            
+            <select id="select-penalidade">
+                <option value="">-- Selecione uma Falta/Penalidade --</option>
+                <option value="rede">Tocar na Rede (Durant o ataque)</option>
+                <option value="saque">Falta de Saque (Pisar na linha, 8 segundos)</option>
+                <option value="conducao">Condução (Carregar ou Segurar a bola)</option>
+                <option value="rotacao">Falta de Rotação (Ordem incorreta)</option>
+                <option value="cartao">Cartões (Amarelo, Vermelho, Expulsão)</option>
+            </select>
+
+            <div id="detalhe-penalidade" class="detalhe-penalidade">
+                </div>
         </section>
 
         <hr>

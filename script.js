@@ -1,113 +1,253 @@
 script.js
+// VARIÁVEIS DE ESTADO
 let pontosA = 0;
 let pontosB = 0;
 let setsA = 0;
 let setsB = 0;
 let setAtual = 1;
-let saque = 'A'; // Começa com o Time A sacando
+let saque = 'A'; // 'A' ou 'B'
+let cronometroId = null; // Para controlar o intervalo do cronômetro
 
-const pontosElementoA = document.getElementById('pontosA');
-const pontosElementoB = document.getElementById('pontosB');
-const setsElementoA = document.getElementById('setsA');
-const setsElementoB = document.getElementById('setsB');
-const setAtualElemento = document.getElementById('setAtual');
-const saqueElementoA = document.getElementById('saqueA');
-const saqueElementoB = document.getElementById('saqueB');
+// ELEMENTOS DO DOM (DECLARAÇÃO CONSOLIDADA)
+const DOM = {
+    pontosA: document.getElementById('pontosA'),
+    pontosB: document.getElementById('pontosB'),
+    setsA: document.getElementById('setsA'),
+    setsB: document.getElementById('setsB'),
+    setAtual: document.getElementById('setAtual'),
+    saqueA: document.getElementById('saqueA'),
+    saqueB: document.getElementById('saqueB'),
+    overlay: document.getElementById('overlay-vencedor'),
+    timeVencedor: document.getElementById('time-vencedor'),
+    contadorTempo: document.getElementById('contador-tempo'),
+    botoesPonto: document.querySelectorAll('.botao-ponto'),
+    detalhePenalidade: document.getElementById('detalhe-penalidade'),
+    selectPenalidade: document.getElementById('select-penalidade')
+};
 
-// Função para atualizar o indicador visual de saque
+// Dicionário de regras de penalidades
+const regrasPenalidades = {
+    rede: {
+        titulo: "Toque na Rede (Durante o ataque)",
+        regra: "O jogador toca em qualquer parte da rede, antenas ou cabos de fixação durante a ação de jogar a bola, ou se isso interferir no jogo. É falta. O ponto é dado ao adversário."
+    },
+    saque: {
+        titulo: "Falta de Saque",
+        regra: "O jogador pisa na linha de fundo ou dentro da quadra no momento do contato com a bola (durante o saque) ou excede o tempo limite de 8 segundos. O ponto é dado ao adversário."
+    },
+    conducao: {
+        titulo: "Condução (Carregar)",
+        regra: "A bola é 'segurada' ou 'conduzida' pelo jogador. O contato deve ser rápido e limpo, exceto no primeiro toque (defesa). Falta resulta em ponto para o adversário."
+    },
+    rotacao: {
+        titulo: "Falta de Rotação",
+        regra: "O time não segue a ordem correta de rotação no momento do saque. O ponto do rally é revertido (ou dado) ao adversário, e a ordem correta deve ser restabelecida."
+    },
+    cartao: {
+        titulo: "Cartões (Amarelo e Vermelho)",
+        regra: "Amarelo: advertência (sem perda de ponto). Vermelho: penalidade (perda do rally/ponto e saque para o adversário). Cartões subsequentes resultam em expulsão do set ou da partida."
+    }
+};
+
+// ------------------------------------
+// FUNÇÕES DE CONTROLE DE INTERFACE (UI)
+// ------------------------------------
+
 function atualizarSaque() {
-    saqueElementoA.classList.remove('saque');
-    saqueElementoB.classList.remove('saque');
+    DOM.saqueA.classList.remove('saque');
+    DOM.saqueB.classList.remove('saque');
     if (saque === 'A') {
-        saqueElementoA.classList.add('saque');
+        DOM.saqueA.classList.add('saque');
     } else {
-        saqueElementoB.classList.add('saque');
+        DOM.saqueB.classList.add('saque');
     }
 }
 
-// Lógica básica para pontuar e verificar set
+function setBotoesHabilitados(habilitado) {
+    const acao = habilitado ? 'remove' : 'add';
+    DOM.botoesPonto.forEach(botao => {
+        botao.classList[acao]('desabilitado');
+    });
+}
+
+// ------------------------------------
+// LÓGICA DE JOGO
+// ------------------------------------
+
+// Chamada pelo botão no HTML
 function marcarPonto(time) {
+    // 1. Marca o ponto e atualiza o DOM
     if (time === 'A') {
         pontosA++;
-        pontosElementoA.textContent = pontosA;
-        // Se Time A marcou, o saque é dele
-        saque = 'A';
+        DOM.pontosA.textContent = pontosA;
     } else {
         pontosB++;
-        pontosElementoB.textContent = pontosB;
-        // Se Time B marcou, o saque é dele
-        saque = 'B';
+        DOM.pontosB.textContent = pontosB;
     }
-
-    // Atualiza visualmente quem está sacando
+    
+    // 2. O time que marcou o ponto ganha o saque (Regra Rally Point)
+    saque = time;
     atualizarSaque();
 
-    // *** LÓGICA DE FIM DE SET (Simplificada) ***
-    // Os sets vão até 25 pontos, exceto o 5º que vai a 15, com 2 pontos de diferença.
-    // Esta é uma checagem básica. Para uma lógica completa, você precisará de mais checagens.
-    
-    let pontoDeSet = (setAtual < 5) ? 25 : 15;
-    
-    if (pontosA >= pontoDeSet && pontosA >= pontosB + 2) {
+    // 3. Verifica Fim de Set
+    verificarFimDeSet();
+}
+
+function verificarFimDeSet() {
+    const limitePonto = (setAtual < 5) ? 25 : 15;
+    let timeVencedor = null;
+
+    // Condição para ganhar: atingir o limite E ter 2 pontos de diferença
+    if (pontosA >= limitePonto && (pontosA - pontosB) >= 2) {
+        timeVencedor = 'Time A';
         setsA++;
-        setsElementoA.textContent = setsA;
-        alert(`FIM DO SET ${setAtual}! Time A venceu.`);
-        iniciarNovoSet();
-    } else if (pontosB >= pontoDeSet && pontosB >= pontosA + 2) {
+        DOM.setsA.textContent = setsA;
+    } else if (pontosB >= limitePonto && (pontosB - pontosA) >= 2) {
+        timeVencedor = 'Time B';
         setsB++;
-        setsElementoB.textContent = setsB;
-        alert(`FIM DO SET ${setAtual}! Time B venceu.`);
-        iniciarNovoSet();
+        DOM.setsB.textContent = setsB;
+    }
+
+    if (timeVencedor) {
+        iniciarPausaOuFimDeJogo(timeVencedor);
     }
 }
 
-// Inicia o próximo set e verifica fim de jogo
-function iniciarNovoSet() {
-    // Verifica Fim de Jogo (Melhor de 5, 3 sets para ganhar)
+function iniciarPausaOuFimDeJogo(vencedor) {
+    DOM.timeVencedor.textContent = vencedor;
+    
+    // Verifica Fim de Jogo
     if (setsA === 3 || setsB === 3) {
-        const vencedor = setsA === 3 ? 'Time A' : 'Time B';
-        alert(`FIM DE JOGO! O ${vencedor} venceu a partida.`);
-        resetarPlacar(true); // Reseta tudo se o jogo terminou
-        return;
+        const vencedorPartida = setsA === 3 ? 'Time A' : 'Time B';
+        DOM.timeVencedor.textContent = `PARABÉNS! ${vencedorPartida} Venceu o JOGO!`;
+        DOM.contadorTempo.textContent = 'FIM DE PARTIDA. Clique em "Resetar Tudo" para um novo jogo.';
+        
+        DOM.overlay.classList.add('ativo');
+        setBotoesHabilitados(false);
+
+    } else {
+        alert(`FIM DO SET ${setAtual}! ${vencedor} venceu.`);
+        iniciarCronometroPausa();
+    }
+}
+
+// Lógica de cronômetro e pausa de 2 minutos
+function iniciarCronometroPausa() {
+    const TEMPO_PAUSA_MS = 120 * 1000; // 2 minutos
+    let tempoRestante = TEMPO_PAUSA_MS;
+
+    setBotoesHabilitados(false);
+    DOM.overlay.classList.add('ativo');
+
+    // Função auxiliar para formatar 00:00
+    const formatarTempo = (ms) => {
+        const minutos = Math.floor(ms / 60000);
+        const segundos = Math.floor((ms % 60000) / 1000);
+        return `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+    };
+
+    DOM.contadorTempo.textContent = `Reiniciando em ${formatarTempo(tempoRestante)}...`;
+
+    // Limpa qualquer cronômetro anterior
+    if (cronometroId) {
+        clearInterval(cronometroId);
     }
 
-    // Se o jogo continua, incrementa o set
+    cronometroId = setInterval(() => {
+        tempoRestante -= 1000;
+        
+        DOM.contadorTempo.textContent = `Reiniciando em ${formatarTempo(tempoRestante)}...`;
+
+        if (tempoRestante <= 0) {
+            clearInterval(cronometroId);
+            finalizarPausa();
+        }
+    }, 1000);
+}
+
+function finalizarPausa() {
+    DOM.overlay.classList.remove('ativo');
+    setBotoesHabilitados(true);
+    iniciarNovoSet(); 
+}
+
+function iniciarNovoSet() {
+    // 1. Inicia o próximo set
     setAtual++;
-    setAtualElemento.textContent = setAtual;
+    DOM.setAtual.textContent = setAtual;
     
-    // Zera os pontos para o novo set
+    // 2. Zera os pontos
     pontosA = 0;
     pontosB = 0;
-    pontosElementoA.textContent = pontosA;
-    pontosElementoB.textContent = pontosB;
+    DOM.pontosA.textContent = pontosA;
+    DOM.pontosB.textContent = pontosB;
 
-    // Alterna o primeiro saque do set (regra básica)
-    saque = (saque === 'A') ? 'B' : 'A';
+    // 3. Alterna o primeiro saque do novo set
+    saque = (saque === 'A') ? 'B' : 'A'; 
     atualizarSaque();
 }
 
-
-// Função para resetar todo o placar
+// Chamada pelo botão no HTML
 function resetarPlacar(jogoTerminado = false) {
     if (!jogoTerminado && !confirm('Tem certeza que deseja resetar todo o placar e sets?')) {
         return;
     }
+    
+    // Para o cronômetro, se estiver ativo
+    if (cronometroId) {
+        clearInterval(cronometroId);
+        cronometroId = null;
+    }
+
+    // Reseta o estado
     pontosA = 0;
     pontosB = 0;
     setsA = 0;
     setsB = 0;
     setAtual = 1;
-    saque = 'A'; // Reinicia o saque
+    saque = 'A'; 
 
-    pontosElementoA.textContent = pontosA;
-    pontosElementoB.textContent = pontosB;
-    setsElementoA.textContent = setsA;
-    setsElementoB.textContent = setsB;
-    setAtualElemento.textContent = setAtual;
+    // Atualiza a interface
+    DOM.pontosA.textContent = pontosA;
+    DOM.pontosB.textContent = pontosB;
+    DOM.setsA.textContent = setsA;
+    DOM.setsB.textContent = setsB;
+    DOM.setAtual.textContent = setAtual;
     
+    // Garante que o overlay seja fechado e botões habilitados
+    DOM.overlay.classList.remove('ativo');
+    setBotoesHabilitados(true);
+
     atualizarSaque();
-    alert('Placar resetado.');
+    if (!jogoTerminado) {
+        alert('Placar resetado.');
+    }
 }
 
-// Inicializa o indicador de saque ao carregar
-document.addEventListener('DOMContentLoaded', atualizarSaque);
+// ------------------------------------
+// LÓGICA DE DÚVIDAS E PENALIDADES
+// ------------------------------------
+
+function mostrarDetalhePenalidade() {
+    const chave = DOM.selectPenalidade.value;
+    
+    if (chave in regrasPenalidades) {
+        const detalhe = regrasPenalidades[chave];
+        DOM.detalhePenalidade.innerHTML = `
+            <h4>${detalhe.titulo}</h4>
+            <p>${detalhe.regra}</p>
+        `;
+    } else {
+        DOM.detalhePenalidade.innerHTML = `
+            <p>Selecione um tópico acima para ver os detalhes da regra/penalidade.</p>
+        `;
+    }
+}
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', () => {
+    atualizarSaque();
+    mostrarDetalhePenalidade(); 
+    // Adiciona o listener de mudança ao select
+    DOM.selectPenalidade.addEventListener('change', mostrarDetalhePenalidade);
+});
