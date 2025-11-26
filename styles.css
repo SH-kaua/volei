@@ -1,274 +1,150 @@
 styles.css
-/* Paleta de Cores: #000 (Preto), #FF0000 (Vermelho) e #FFF (Branco para texto) */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-/* Base e Tipografia (Unidades relativas para escala) */
 body {
-    font-family: sans-serif;
-    background-color: #000;
-    color: #fff;
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  font-family: 'Arial', sans-serif;
+  background-color: #000;
+  color: #fff;
+  text-align: center;
 }
 
 header {
-    background-color: #1a1a1a;
-    width: 100%;
-    text-align: center;
-    padding: 2vh 0; /* Padding baseado na altura da viewport */
-    border-bottom: 3px solid #FF0000;
+  background: linear-gradient(90deg, #c00, #900);
+  padding: 20px;
+  font-size: 2.5em;
+  font-weight: bold;
+  letter-spacing: 2px;
 }
 
-h1 {
-    font-size: 4vw; /* Tamanho do título baseado na largura da viewport */
-    color: #FF0000;
-    margin: 0.5vh 0;
+.container {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
 }
 
-main {
-    padding: 2vw; /* Padding baseado na largura da viewport */
-    width: 95%; /* Ocupa a maior parte da tela */
-    max-width: 1200px; /* Limite máximo para telas muito grandes */
-    flex-grow: 1;
+.teams {
+  display: flex;
+  justify-content: space-around;
+  margin: 30px 0;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
-section {
-    margin-bottom: 3vw;
-    padding: 3vw;
-    background-color: #111;
-    border-radius: 8px;
-    border: 1px solid #333;
-    color: #fff;
+.team {
+  background: #111;
+  padding: 30px;
+  border: 3px solid #c00;
+  border-radius: 15px;
+  width: 380px;
+  min-width: 300px;
 }
 
-h2, h3 {
-    color: #FF0000;
-    text-align: center;
+.team-name {
+  font-size: 2em;
+  margin-bottom: 10px;
+  color: #fff;
+  outline: none;
 }
 
-hr {
-    border: none;
-    border-top: 1px solid #333;
-    margin: 3vw 0;
+.score {
+  font-size: 7em;
+  font-weight: bold;
+  color: #c00;
+  margin: 10px 0;
 }
 
-/* --- Área de Pontuação Flexível --- */
-#placar {
-    display: flex;
-    justify-content: space-around;
-    gap: 2vw;
-    flex-wrap: wrap; 
+.buttons {
+  margin: 20px 0;
 }
 
-.time {
-    background-color: #222;
-    padding: 2vw;
-    border-radius: 8px;
-    width: 48%; 
-    min-width: 250px; 
-    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); 
-    position: relative;
-    text-align: center;
+button {
+  background: #c00;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  margin: 5px;
+  font-size: 1.5em;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
-.pontuacao {
-    font-size: 8vw; 
-    display: block;
-    font-weight: bold;
-    color: #FF0000;
-    margin: 10px 0;
+button:hover {
+  background: #ff0000;
+  transform: scale(1.05);
 }
 
-.controles-ponto {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 15px;
+button.undo {
+  background: #444;
 }
 
-.botao-aumentar, .botao-diminuir {
-    border: none;
-    padding: 1.5vw 1vw; 
-    font-size: 1.1vw; 
-    cursor: pointer;
-    border-radius: 5px;
-    font-weight: bold;
-    flex-grow: 1;
-    transition: background-color 0.3s;
+button.undo:hover {
+  background: #666;
 }
 
-.botao-aumentar {
-    background-color: #FF0000;
-    color: #000;
+.sets {
+  margin: 40px 0;
+  font-size: 1.8em;
 }
 
-.botao-aumentar:hover:not(.desabilitado) {
-    background-color: #e60000;
+.sets span {
+  background: #c00;
+  padding: 10px 25px;
+  margin: 0 15px;
+  border-radius: 8px;
+  min-width: 60px;
+  display: inline-block;
 }
 
-.botao-diminuir {
-    background-color: #333;
-    color: #fff;
+.rules {
+  background: #111;
+  padding: 30px;
+  margin: 40px auto;
+  max-width: 900px;
+  border: 2px solid #c00;
+  border-radius: 10px;
+  text-align: left;
+  line-height: 1.7;
 }
 
-.botao-diminuir:hover:not(.desabilitado) {
-    background-color: #555;
+.rules h2 {
+  text-align: center;
+  color: #c00;
+  font-size: 2.2em;
+  margin-bottom: 20px;
 }
 
-/* --- Indicadores e Info Geral --- */
-.saque-indicador {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: #FF0000;
-    color: #000; 
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 0.9em;
-    display: none;
+.rules ul {
+  list-style: none;
 }
 
-.saque {
-    display: block !important;
+.rules li {
+  margin: 12px 0;
+  padding-left: 10px;
 }
 
-#info-geral {
-    margin-top: 3vw;
-    padding: 2vw;
-    background-color: #0a0a0a;
-    border-radius: 5px;
-    text-align: center;
+.rules li::before {
+  content: "🏐 ";
 }
 
-#info-geral button {
-    margin-top: 10px;
-    background-color: #555;
-    color: #fff;
-    border: none;
-    padding: 8px 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-#info-geral button:hover {
-    background-color: #777;
-}
-
-.desabilitado {
-    pointer-events: none;
-    opacity: 0.5; 
-}
-
-/* --- Regras e Penalidades --- */
-#regras-section li {
-    background-color: #222;
-    color: #fff;
-    margin: 10px 0;
-    padding: 10px;
-    border-left: 5px solid #FF0000;
-    border-radius: 3px;
-}
-
-#select-penalidade {
-    padding: 10px;
-    font-size: 1em;
-    margin: 15px 0;
-    width: 90%; 
-    max-width: 500px;
-    background-color: #333;
-    color: #fff;
-    border: 1px solid #FF0000;
-    border-radius: 5px;
-}
-
-.detalhe-penalidade {
-    margin-top: 20px;
-    padding: 15px;
-    text-align: left;
-    background-color: #0a0a0a;
-    border: 1px solid #FF0000;
-    min-height: 100px;
-}
-
-/* --- Overlay de Vencedor (Pausa) --- */
-#overlay-vencedor {
-    display: none; 
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-#overlay-vencedor.ativo {
-    display: flex;
-}
-
-#mensagem-vencedor {
-    background-color: #111;
-    border: 5px solid #FF0000;
-    padding: 40px 60px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
-    color: #fff;
-}
-
-#mensagem-vencedor h2 {
-    font-size: 2.5em;
-    color: #FF0000;
-    margin-bottom: 20px;
-}
-
-#contador-tempo {
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #fff;
-}
-
-/* --- Rodapé --- */
 footer {
-    width: 100%;
-    text-align: center;
-    padding: 1vh 0;
-    background-color: #1a1a1a;
-    border-top: 1px solid #FF0000;
-    color: #fff;
-    margin-top: auto; 
+  margin-top: 50px;
+  padding: 20px;
+  background: #111;
+  font-size: 0.9em;
 }
 
-/* --- MEDIA QUERIES PARA RESPONSIVIDADE EM TELAS MENORES (Celulares) --- */
-@media (max-width: 768px) {
-    
-    #placar {
-        flex-direction: column; /* Placar se torna vertical */
-    }
-
-    .time {
-        width: 100%; 
-        margin-bottom: 20px;
-    }
-
-    h1 {
-        font-size: 8vw;
-    }
-
-    .pontuacao {
-        font-size: 15vw;
-    }
-
-    .botao-aumentar, .botao-diminuir {
-        font-size: 4vw; 
-        padding: 3vw 2vw;
-    }
+/* Responsivo */
+@media (max-width: 800px) {
+  .teams {
+    flex-direction: column;
+    align-items: center;
+  }
+  .score {
+    font-size: 5.5em;
+  }
 }

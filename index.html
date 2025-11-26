@@ -2,104 +2,67 @@ index.html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>Marcação e Pontuação de Vôlei</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placar de Vôlei</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="overlay-vencedor">
-        <div id="mensagem-vencedor">
-            <h2>🏆 <span id="time-vencedor">Time Vencedor</span> Ganhou o Set! 🏆</h2>
-            <p id="contador-tempo">Reiniciando em 02:00...</p>
+  <header>PLACAR DE VÔLEI</header>
+
+  <div class="container">
+
+    <!-- Placar principal -->
+    <div class="teams">
+      <div class="team" id="teamA">
+        <div class="team-name" contenteditable="true">Time A</div>
+        <div class="score" id="scoreA">0</div>
+        <div class="buttons">
+          <button onclick="addPoint('A', 1)">+1</button>
+          <button onclick="addPoint('A', -1)">-1</button>
         </div>
+      </div>
+
+      <div class="team" id="teamB">
+        <div class="team-name" contenteditable="true">Time B</div>
+        <div class="score" id="scoreB">0</div>
+        <div class="buttons">
+          <button onclick="addPoint('B', 1)">+1</button>
+          <button onclick="addPoint('B', -1)">-1</button>
+        </div>
+      </div>
     </div>
 
-    <header>
-        <h1>🏐 Vôlei - Marcador de Pontos 🏐</h1>
-    </header>
+    <!-- Sets ganhos -->
+    <div class="sets">
+      Sets ganhos: 
+      <span id="setsA">0</span> × <span id="setsB">0</span>
+      <button onclick="winSet('A')">Time A ganhou o set</button>
+      <button onclick="winSet('B')">Time B ganhou o set</button>
+      <button class="undo" onclick="resetSet()">Zerar Set Atual</button>
+      <button class="undo" onclick="resetAll()">Novo Jogo</button>
+    </div>
 
-    <main>
-        <section id="placar-section">
-            <h2>Placar Atual</h2>
-            <div id="placar">
-                
-                <div class="time" id="timeA">
-                    <h3>Time A</h3>
-                    <p class="pontuacao-label">Pontos:</p>
-                    <span class="pontuacao" id="pontosA">0</span>
-                    
-                    <div class="controles-ponto">
-                        <button class="botao-diminuir" onclick="diminuirPonto('A')">-1 Ponto</button>
-                        <button class="botao-aumentar" onclick="marcarPonto('A')">+1 Ponto</button>
-                    </div>
-                    
-                    <div class="saque-indicador" id="saqueA">Saque</div>
-                </div>
+    <!-- Área de regras -->
+    <div class="rules">
+      <h2>Regras Básicas do Vôlei (FIVB)</h2>
+      <ul>
+        <li>Jogo é disputado em melhor de 5 sets.</li>
+        <li>Os 4 primeiros sets são até <strong>25 pontos</strong> (com diferença mínima de 2).</li>
+        <li>O 5º set (tie-break) é até <strong>15 pontos</strong> (diferença mínima de 2).</li>
+        <li>Cada equipe tem direito a <strong>6 substituições</strong> por set e <strong>2 tempos</strong> de 30 segundos.</li>
+        <li>O toque na rede é falta (exceto se a bola empurrar a rede).</li>
+        <li>A bola pode tocar a rede no saque (desde que passe para o lado adversário).</li>
+        <li>Não é permitido segurar ou conduzir a bola.</li>
+        <li>O líbero não pode atacar acima da rede nem bloquear.</li>
+      </ul>
+    </div>
 
-                <div class="time" id="timeB">
-                    <h3>Time B</h3>
-                    <p class="pontuacao-label">Pontos:</p>
-                    <span class="pontuacao" id="pontosB">0</span>
-                    
-                    <div class="controles-ponto">
-                        <button class="botao-diminuir" onclick="diminuirPonto('B')">-1 Ponto</button>
-                        <button class="botao-aumentar" onclick="marcarPonto('B')">+1 Ponto</button>
-                    </div>
-                    
-                    <div class="saque-indicador" id="saqueB">Saque</div>
-                </div>
+  </div>
 
-            </div>
-            
-            <div id="info-geral">
-                <p>Set Atual: <span id="setAtual">1</span></p>
-                <p>Sets Ganhos A: <span id="setsA">0</span> | Sets Ganhos B: <span id="setsB">0</span></p>
-                <button onclick="resetarPlacar()">Resetar Tudo</button>
-            </div>
-        </section>
+  <footer>Placar de Vôlei • Preto & Vermelho • 2025</footer>
 
-        <hr>
-
-        <section id="duvidas-penalidades-section">
-            <h2>❓ Dúvidas sobre Penalidades e Faltas</h2>
-            <p>Selecione um tópico para ver a regra correspondente:</p>
-            
-            <select id="select-penalidade">
-                <option value="">-- Selecione uma Falta/Penalidade --</option>
-                <option value="rede">Tocar na Rede (Durant o ataque)</option>
-                <option value="saque">Falta de Saque (Pisar na linha, 8 segundos)</option>
-                <option value="conducao">Condução (Carregar ou Segurar a bola)</option>
-                <option value="rotacao">Falta de Rotação (Ordem incorreta)</option>
-                <option value="cartao">Cartões (Amarelo, Vermelho, Expulsão)</option>
-            </select>
-
-            <div id="detalhe-penalidade" class="detalhe-penalidade">
-                </div>
-        </section>
-
-        <hr>
-
-        <section id="regras-section">
-            <h2>📜 Regras Básicas do Vôlei</h2>
-            <p><strong>Objetivo:</strong> Fazer a bola tocar o chão da quadra adversária.</p>
-            <ul>
-                <li>Cada time pode tocar na bola no máximo 3 vezes antes de enviá-la para o lado adversário (bloqueio não conta).</li>
-                <li>Um jogador não pode tocar na bola duas vezes consecutivas.</li>
-                <li>Os jogos são geralmente disputados em melhor de 5 sets (3 sets para ganhar).</li>
-                <li>Os primeiros 4 sets vão até 25 pontos, com uma diferença mínima de 2 pontos.</li>
-                <li>O set de desempate (5º set) vai até 15 pontos, com uma diferença mínima de 2 pontos.</li>
-                <li>A pontuação é feita por Rally Point (ponto em toda jogada).</li>
-                <li>O time que marca o ponto ganha o direito de sacar na próxima jogada.</li>
-            </ul>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2025 Marcador de Vôlei Simples</p>
-    </footer>
-
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
