@@ -60,22 +60,22 @@ hr {
     display: flex;
     justify-content: space-around;
     gap: 2vw;
-    flex-wrap: wrap; /* Permite que os times quebrem a linha em telas pequenas */
+    flex-wrap: wrap; 
 }
 
 .time {
     background-color: #222;
     padding: 2vw;
     border-radius: 8px;
-    width: 48%; /* Quase 50% para caber lado a lado com gap */
-    min-width: 250px; /* Garante que não fique minúsculo */
+    width: 48%; 
+    min-width: 250px; 
     box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); 
     position: relative;
     text-align: center;
 }
 
 .pontuacao {
-    font-size: 8vw; /* Tamanho da fonte proporcional à tela */
+    font-size: 8vw; 
     display: block;
     font-weight: bold;
     color: #FF0000;
@@ -91,7 +91,7 @@ hr {
 
 .botao-aumentar, .botao-diminuir {
     border: none;
-    padding: 1.5vw 1vw; /* Padding proporcional */
+    padding: 1.5vw 1vw; 
     font-size: 1.1vw; 
     cursor: pointer;
     border-radius: 5px;
@@ -105,9 +105,17 @@ hr {
     color: #000;
 }
 
+.botao-aumentar:hover:not(.desabilitado) {
+    background-color: #e60000;
+}
+
 .botao-diminuir {
     background-color: #333;
     color: #fff;
+}
+
+.botao-diminuir:hover:not(.desabilitado) {
+    background-color: #555;
 }
 
 /* --- Indicadores e Info Geral --- */
@@ -124,6 +132,10 @@ hr {
     display: none;
 }
 
+.saque {
+    display: block !important;
+}
+
 #info-geral {
     margin-top: 3vw;
     padding: 2vw;
@@ -132,17 +144,96 @@ hr {
     text-align: center;
 }
 
+#info-geral button {
+    margin-top: 10px;
+    background-color: #555;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+#info-geral button:hover {
+    background-color: #777;
+}
+
+.desabilitado {
+    pointer-events: none;
+    opacity: 0.5; 
+}
+
 /* --- Regras e Penalidades --- */
+#regras-section li {
+    background-color: #222;
+    color: #fff;
+    margin: 10px 0;
+    padding: 10px;
+    border-left: 5px solid #FF0000;
+    border-radius: 3px;
+}
+
 #select-penalidade {
     padding: 10px;
     font-size: 1em;
     margin: 15px 0;
-    width: 90%; /* Usa porcentagem da área */
+    width: 90%; 
     max-width: 500px;
     background-color: #333;
     color: #fff;
     border: 1px solid #FF0000;
     border-radius: 5px;
+}
+
+.detalhe-penalidade {
+    margin-top: 20px;
+    padding: 15px;
+    text-align: left;
+    background-color: #0a0a0a;
+    border: 1px solid #FF0000;
+    min-height: 100px;
+}
+
+/* --- Overlay de Vencedor (Pausa) --- */
+#overlay-vencedor {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#overlay-vencedor.ativo {
+    display: flex;
+}
+
+#mensagem-vencedor {
+    background-color: #111;
+    border: 5px solid #FF0000;
+    padding: 40px 60px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
+    color: #fff;
+}
+
+#mensagem-vencedor h2 {
+    font-size: 2.5em;
+    color: #FF0000;
+    margin-bottom: 20px;
+}
+
+#contador-tempo {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #fff;
 }
 
 /* --- Rodapé --- */
@@ -153,23 +244,21 @@ footer {
     background-color: #1a1a1a;
     border-top: 1px solid #FF0000;
     color: #fff;
-    margin-top: auto; /* Empurra o rodapé para baixo */
+    margin-top: auto; 
 }
 
-/* --- MEDIA QUERIES PARA RESPONSIVIDADE EM TELAS MENORES (Ex: Celulares) --- */
+/* --- MEDIA QUERIES PARA RESPONSIVIDADE EM TELAS MENORES (Celulares) --- */
 @media (max-width: 768px) {
     
-    /* Placar se torna vertical */
     #placar {
-        flex-direction: column;
+        flex-direction: column; /* Placar se torna vertical */
     }
 
     .time {
-        width: 100%; /* Ocupa a largura total */
+        width: 100%; 
         margin-bottom: 20px;
     }
 
-    /* Reduz o tamanho de fontes que usam vw em telas pequenas */
     h1 {
         font-size: 8vw;
     }
@@ -179,7 +268,7 @@ footer {
     }
 
     .botao-aumentar, .botao-diminuir {
-        font-size: 4vw; /* Aumenta o tamanho dos botões para serem clicáveis */
+        font-size: 4vw; 
         padding: 3vw 2vw;
     }
 }

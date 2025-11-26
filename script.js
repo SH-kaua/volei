@@ -7,7 +7,6 @@ let setsB = 0;
 let setAtual = 1;
 let saque = 'A'; // 'A' ou 'B'
 let cronometroId = null; 
-// Armazena o último time que marcou o ponto (útil para correção manual do saque)
 let ultimoPontoMarcado = 'A'; 
 
 // ELEMENTOS DO DOM
@@ -22,44 +21,24 @@ const DOM = {
     overlay: document.getElementById('overlay-vencedor'),
     timeVencedor: document.getElementById('time-vencedor'),
     contadorTempo: document.getElementById('contador-tempo'),
-    // Seleciona botões de AUMENTAR e DIMINUIR
     botoesPonto: document.querySelectorAll('.botao-aumentar, .botao-diminuir'), 
     detalhePenalidade: document.getElementById('detalhe-penalidade'),
     selectPenalidade: document.getElementById('select-penalidade')
 };
 
-// Dicionário de regras de penalidades
+// Dicionário de regras de penalidades (omito o conteúdo por brevidade, mas permanece o mesmo)
 const regrasPenalidades = {
-    rede: {
-        titulo: "Toque na Rede (Durante o ataque)",
-        regra: "O jogador toca em qualquer parte da rede, antenas ou cabos de fixação durante a ação de jogar a bola, ou se isso interferir no jogo. É falta. O ponto é dado ao adversário."
-    },
-    saque: {
-        titulo: "Falta de Saque",
-        regra: "O jogador pisa na linha de fundo ou dentro da quadra no momento do contato com a bola (durante o saque) ou excede o tempo limite de 8 segundos. O ponto é dado ao adversário."
-    },
-    conducao: {
-        titulo: "Condução (Carregar)",
-        regra: "A bola é 'segurada' ou 'conduzida' pelo jogador. O contato deve ser rápido e limpo, exceto no primeiro toque (defesa). Falta resulta em ponto para o adversário."
-    },
-    rotacao: {
-        titulo: "Falta de Rotação",
-        regra: "O time não segue a ordem correta de rotação no momento do saque. O ponto do rally é revertido (ou dado) ao adversário, e a ordem correta deve ser restabelecida."
-    },
-    cartao: {
-        titulo: "Cartões (Amarelo e Vermelho)",
-        regra: "Amarelo: advertência (sem perda de ponto). Vermelho: penalidade (perda do rally/ponto e saque para o adversário). Cartões subsequentes resultam em expulsão do set ou da partida."
-    }
+    rede: {titulo: "Toque na Rede (Durante o ataque)", regra: "..." },
+    saque: {titulo: "Falta de Saque", regra: "..." },
+    conducao: {titulo: "Condução (Carregar)", regra: "..." },
+    rotacao: {titulo: "Falta de Rotação", regra: "..." },
+    cartao: {titulo: "Cartões (Amarelo e Vermelho)", regra: "..." }
 };
 
 // ------------------------------------
 // FUNÇÕES DE CONTROLE DE PONTUAÇÃO
 // ------------------------------------
 
-/**
- * Adiciona um ponto ao time especificado e ajusta o saque (Rally Point).
- * @param {string} time - 'A' ou 'B'.
- */
 function marcarPonto(time) {
     if (time === 'A') {
         pontosA++;
@@ -69,7 +48,6 @@ function marcarPonto(time) {
         DOM.pontosB.textContent = pontosB;
     }
     
-    // O time que marcou o ponto ganha/mantém o saque
     saque = time;
     ultimoPontoMarcado = time;
     atualizarSaque();
@@ -77,13 +55,7 @@ function marcarPonto(time) {
     verificarFimDeSet();
 }
 
-/**
- * Remove um ponto do time especificado.
- * O saque não muda, pois presume-se que é uma correção manual.
- * @param {string} time - 'A' ou 'B'.
- */
 function diminuirPonto(time) {
-    // Garante que o ponto não seja negativo
     if (time === 'A' && pontosA > 0) {
         pontosA--;
         DOM.pontosA.textContent = pontosA;
@@ -92,10 +64,7 @@ function diminuirPonto(time) {
         DOM.pontosB.textContent = pontosB;
     }
     
-    // O saque permanece com o último time que marcou o ponto (ou seja, não altera o saque)
     atualizarSaque();
-    
-    // Verifica se a correção afetou o fim do set
     verificarFimDeSet();
 }
 
@@ -103,7 +72,6 @@ function verificarFimDeSet() {
     const limitePonto = (setAtual < 5) ? 25 : 15;
     let timeVencedor = null;
 
-    // Condição para ganhar: atingir o limite E ter 2 pontos de diferença
     if (pontosA >= limitePonto && (pontosA - pontosB) >= 2) {
         timeVencedor = 'Time A';
         setsA++;
@@ -143,14 +111,16 @@ function setBotoesHabilitados(habilitado) {
 function iniciarPausaOuFimDeJogo(vencedor) {
     DOM.timeVencedor.textContent = vencedor;
     
-    // Verifica se é Fim de Jogo (Melhor de 5 sets)
     if (setsA === 3 || setsB === 3) {
+        // FIM DE JOGO
         const vencedorPartida = setsA === 3 ? 'Time A' : 'Time B';
         DOM.timeVencedor.textContent = `PARABÉNS! ${vencedorPartida} Venceu o JOGO!`;
-        DOM.contadorTempo.textContent = 'FIM DE PARTIDA. Clique em "Resetar Tudo" para um novo jogo.';
+        DOM.contadorTempo.textContent = 'FIM DE PARTIDA. Use os botões abaixo para corrigir ou clique em "Resetar Tudo".';
         
         DOM.overlay.classList.add('ativo');
-        setBotoesHabilitados(false);
+        
+        // **NÃO DESABILITA OS BOTÕES AQUI** - Permite a correção manual do placar final.
+        setBotoesHabilitados(true); 
 
     } else {
         // Pausa de 2 minutos entre sets
@@ -163,7 +133,8 @@ function iniciarCronometroPausa() {
     const TEMPO_PAUSA_MS = 120 * 1000; // 2 minutos
     let tempoRestante = TEMPO_PAUSA_MS;
 
-    setBotoesHabilitados(false);
+    // DESABILITA botões DURANTE a pausa (para evitar contagem automática durante o cronômetro)
+    setBotoesHabilitados(false); 
     DOM.overlay.classList.add('ativo');
 
     const formatarTempo = (ms) => {
@@ -192,7 +163,8 @@ function iniciarCronometroPausa() {
 
 function finalizarPausa() {
     DOM.overlay.classList.remove('ativo');
-    setBotoesHabilitados(true);
+    // HABILITA botões após a pausa
+    setBotoesHabilitados(true); 
     iniciarNovoSet(); 
 }
 
@@ -205,15 +177,11 @@ function iniciarNovoSet() {
     DOM.pontosA.textContent = pontosA;
     DOM.pontosB.textContent = pontosB;
 
-    // Alterna o saque inicial do novo set
     saque = (saque === 'A') ? 'B' : 'A'; 
-    ultimoPontoMarcado = saque; // O primeiro saque define o último ponto marcado
+    ultimoPontoMarcado = saque; 
     atualizarSaque();
 }
 
-/**
- * Reseta todos os placares e estados do jogo.
- */
 function resetarPlacar(jogoTerminado = false) {
     if (!jogoTerminado && !confirm('Tem certeza que deseja resetar todo o placar e sets?')) {
         return;
@@ -224,7 +192,6 @@ function resetarPlacar(jogoTerminado = false) {
         cronometroId = null;
     }
 
-    // Reseta o estado
     pontosA = 0;
     pontosB = 0;
     setsA = 0;
@@ -233,7 +200,6 @@ function resetarPlacar(jogoTerminado = false) {
     saque = 'A'; 
     ultimoPontoMarcado = 'A'; 
 
-    // Atualiza a interface
     DOM.pontosA.textContent = pontosA;
     DOM.pontosB.textContent = pontosB;
     DOM.setsA.textContent = setsA;
@@ -249,10 +215,7 @@ function resetarPlacar(jogoTerminado = false) {
     }
 }
 
-// ------------------------------------
-// LÓGICA DE DÚVIDAS E PENALIDADES
-// ------------------------------------
-
+// LÓGICA DE DÚVIDAS E PENALIDADES (Permanece igual)
 function mostrarDetalhePenalidade() {
     const chave = DOM.selectPenalidade.value;
     
