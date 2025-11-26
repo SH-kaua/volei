@@ -1,10 +1,18 @@
 script.js
-let scoreA = 0;
-let scoreB = 0;
-let setsA = 0;
-let setsB = 0;
+const pointSound = new Audio('sounds/point.mp3');
+const penaltySound = new Audio('sounds/penalty.mp3');
+
+let scoreA = 0, scoreB = 0, setsA = 0, setsB = 0;
+
+function playSound(type) {
+  const sound = type === 'add' ? pointSound : penaltySound;
+  sound.currentTime = 0;
+  sound.play().catch(() => {}); // ignora erro se usuário não interagiu ainda
+}
 
 function addPoint(team, value) {
+  playSound(value > 0 ? 'add' : 'sub');
+
   if (team === 'A') {
     scoreA = Math.max(0, scoreA + value);
     document.getElementById('scoreA').textContent = scoreA;
@@ -15,56 +23,49 @@ function addPoint(team, value) {
 }
 
 function checkSetWinner() {
-  const totalSets = setsA + setsB;
-  const isTiebreak = totalSets === 4;
-
-  const minPoints = isTiebreak ? 15 : 25;
+  const isTiebreak = setsA + setsB === 4;
+  const min = isTiebreak ? 15 : 25;
   const diff = Math.abs(scoreA - scoreB);
 
-  if ((scoreA >= minPoints || scoreB >= minPoints) && diff >= 2) {
-    if (scoreA > scoreB) return 'A';
-    if (scoreB > scoreA) return 'B';
+  if ((scoreA >= min || scoreB >= min) && diff >= 2) {
+    return scoreA > scoreB ? 'A' : 'B';
   }
   return null;
 }
 
-function winSet(winner) {
-  const winnerByRule = checkSetWinner();
+function declareSet(winner) {
+  const actualWinner = checkSetWinner();
 
-  if (!winnerByRule) {
-    alert(`O set ainda não terminou!\nPrecisa de ${setsA + setsB === 4 ? 15 : 25} pontos com pelo menos 2 de vantagem.`);
+  if (!actualWinner) {
+    alert(`Set ainda não acabou!\nPrecisa de ${setsA + setsB === 4 ? 15 : 25} pontos com 2+ de vantagem.`);
     return;
   }
 
-  if (winnerByRule !== winner) {
-    alert(`Atenção: O placar indica que o Time ${winnerByRule} está ganhando o set!`);
-    if (!confirm("Mesmo assim declarar vitória do outro time?")) return;
+  if (actualWinner !== winner) {
+    if (!confirm(`O placar indica vitória do Time ${actualWinner}.\nMesmo assim dar o set ao Time ${winner}?`)) return;
   }
 
-  if (winner === 'A') setsA++;
-  else setsB++;
-
+  if (winner === 'A') setsA++; else setsB++;
   document.getElementById('setsA').textContent = setsA;
   document.getElementById('setsB').textContent = setsB;
 
-  alert(`Time ${winner} venceu o set!\nPlacar de sets: ${setsA} × ${setsB}`);
+  alert(`TIME ${winner} VENCEU O SET!\nPlacar: ${setsA} × ${setsB}`);
 
-  // Zera o set atual
+  // Reset set
   scoreA = scoreB = 0;
   document.getElementById('scoreA').textContent = '0';
   document.getElementById('scoreB').textContent = '0';
 
-  // Verifica campeão
-  if (setsA === 3) {
-    setTimeout(() => alert("TIME A É O CAMPEÃO DA PARTIDA!"), 300);
-  }
-  if (setsB === 3) {
-    setTimeout(() => alert("TIME B É O CAMPEÃO DA PARTIDA!"), 300);
+  // Campeão
+  if (setsA === 3 || setsB === 3) {
+    setTimeout(() => {
+      alert(`PARABÉNS! TIME ${setsA === 3 ? 'A' : 'B'} É O CAMPEÃO DA PARTIDA!`);
+    }, 400);
   }
 }
 
 function resetSet() {
-  if (confirm("Zerar apenas o set atual?")) {
+  if (confirm('Zerar apenas o set atual?')) {
     scoreA = scoreB = 0;
     document.getElementById('scoreA').textContent = '0';
     document.getElementById('scoreB').textContent = '0';
@@ -72,7 +73,7 @@ function resetSet() {
 }
 
 function resetAll() {
-  if (confirm("Iniciar um NOVO JOGO?\nTodo o placar será zerado.")) {
+  if (confirm('Iniciar NOVO JOGO?\nTodo o placar será zerado.')) {
     scoreA = scoreB = setsA = setsB = 0;
     document.getElementById('scoreA').textContent = '0';
     document.getElementById('scoreB').textContent = '0';

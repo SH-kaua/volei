@@ -4,8 +4,9 @@ index.html
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Placar de Vôlei</title>
+  <title>Placar de Vôlei PRO</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
 
@@ -13,55 +14,50 @@ index.html
 
   <div class="container">
 
-    <!-- Placar principal -->
     <div class="teams">
-      <div class="team" id="teamA">
-        <div class="team-name" contenteditable="true">Time A</div>
+      <div class="team">
+        <div class="team-name" contenteditable spellcheck="false">Time A</div>
         <div class="score" id="scoreA">0</div>
         <div class="buttons">
-          <button onclick="addPoint('A', 1)">+1</button>
-          <button onclick="addPoint('A', -1)">-1</button>
+          <button onclick="addPoint('A', 1)" class="add">+</button>
+          <button onclick="addPoint('A', -1)" class="sub">-</button>
         </div>
       </div>
 
-      <div class="team" id="teamB">
-        <div class="team-name" contenteditable="true">Time B</div>
+      <div class="team">
+        <div class="team-name" contenteditable spellcheck="false">Time B</div>
         <div class="score" id="scoreB">0</div>
         <div class="buttons">
-          <button onclick="addPoint('B', 1)">+1</button>
-          <button onclick="addPoint('B', -1)">-1</button>
+          <button onclick="addPoint('B', 1)" class="add">+</button>
+          <button onclick="addPoint('B', -1)" class="sub">-</button>
         </div>
       </div>
     </div>
 
-    <!-- Sets ganhos -->
     <div class="sets">
-      Sets ganhos: 
-      <span id="setsA">0</span> × <span id="setsB">0</span>
-      <button onclick="winSet('A')">Time A ganhou o set</button>
-      <button onclick="winSet('B')">Time B ganhou o set</button>
-      <button class="undo" onclick="resetSet()">Zerar Set Atual</button>
-      <button class="undo" onclick="resetAll()">Novo Jogo</button>
+      Sets: <span id="setsA">0</span> × <span id="setsB">0</span>
+      <div class="set-buttons">
+        <button onclick="declareSet('A')">Time A ganhou set</button>
+        <button onclick="declareSet('B')">Time B ganhou set</button>
+        <button class="secondary" onclick="resetSet()">Zerar set</button>
+        <button class="secondary" onclick="resetAll()">Novo jogo</button>
+      </div>
     </div>
 
-    <!-- Área de regras -->
     <div class="rules">
-      <h2>Regras Básicas do Vôlei (FIVB)</h2>
+      <h2>Regras Oficiais do Vôlei</h2>
       <ul>
-        <li>Jogo é disputado em melhor de 5 sets.</li>
-        <li>Os 4 primeiros sets são até <strong>25 pontos</strong> (com diferença mínima de 2).</li>
-        <li>O 5º set (tie-break) é até <strong>15 pontos</strong> (diferença mínima de 2).</li>
-        <li>Cada equipe tem direito a <strong>6 substituições</strong> por set e <strong>2 tempos</strong> de 30 segundos.</li>
-        <li>O toque na rede é falta (exceto se a bola empurrar a rede).</li>
-        <li>A bola pode tocar a rede no saque (desde que passe para o lado adversário).</li>
-        <li>Não é permitido segurar ou conduzir a bola.</li>
-        <li>O líbero não pode atacar acima da rede nem bloquear.</li>
+        <li>Melhor de 5 sets</li>
+        <li>1º a 4º set: 25 pontos (mínimo 2 de diferença)</li>
+        <li>5º set (tie-break): 15 pontos (mínimo 2 de diferença)</li>
+        <li>6 substituições e 2 tempos por set</li>
+        <li>Líbero não ataca nem bloqueia acima da rede</li>
       </ul>
     </div>
 
   </div>
 
-  <footer>Placar de Vôlei • Preto & Vermelho • 2025</footer>
+  <footer>Placar de Vôlei PRO • 2025</footer>
 
   <script src="script.js"></script>
 </body>
