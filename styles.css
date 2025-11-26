@@ -1,12 +1,14 @@
 styles.css
 /* Paleta de Cores: #000 (Preto), #FF0000 (Vermelho) e #FFF (Branco para texto) */
 
+/* Base e Tipografia (Unidades relativas para escala) */
 body {
     font-family: sans-serif;
-    background-color: #000; /* Fundo preto */
-    color: #fff; /* **Texto branco padrão** */
+    background-color: #000;
+    color: #fff;
     margin: 0;
     padding: 0;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -16,203 +18,168 @@ header {
     background-color: #1a1a1a;
     width: 100%;
     text-align: center;
-    padding: 20px 0;
+    padding: 2vh 0; /* Padding baseado na altura da viewport */
     border-bottom: 3px solid #FF0000;
 }
 
+h1 {
+    font-size: 4vw; /* Tamanho do título baseado na largura da viewport */
+    color: #FF0000;
+    margin: 0.5vh 0;
+}
+
 main {
-    padding: 20px;
-    width: 90%;
-    max-width: 900px;
+    padding: 2vw; /* Padding baseado na largura da viewport */
+    width: 95%; /* Ocupa a maior parte da tela */
+    max-width: 1200px; /* Limite máximo para telas muito grandes */
+    flex-grow: 1;
 }
 
 section {
-    margin-bottom: 40px;
-    padding: 20px;
+    margin-bottom: 3vw;
+    padding: 3vw;
     background-color: #111;
     border-radius: 8px;
     border: 1px solid #333;
-    color: #fff; /* Garante texto branco em seções */
+    color: #fff;
 }
 
-h1, h2, h3 {
-    color: #FF0000; /* Títulos em vermelho */
+h2, h3 {
+    color: #FF0000;
     text-align: center;
 }
 
 hr {
     border: none;
     border-top: 1px solid #333;
-    margin: 30px 0;
+    margin: 3vw 0;
 }
 
-/* --- Área de Pontuação --- */
+/* --- Área de Pontuação Flexível --- */
 #placar {
     display: flex;
     justify-content: space-around;
-    gap: 20px;
+    gap: 2vw;
+    flex-wrap: wrap; /* Permite que os times quebrem a linha em telas pequenas */
 }
 
 .time {
     background-color: #222;
-    padding: 20px;
+    padding: 2vw;
     border-radius: 8px;
-    width: 45%;
+    width: 48%; /* Quase 50% para caber lado a lado com gap */
+    min-width: 250px; /* Garante que não fique minúsculo */
     box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); 
     position: relative;
+    text-align: center;
 }
 
 .pontuacao {
+    font-size: 8vw; /* Tamanho da fonte proporcional à tela */
     display: block;
-    font-size: 4em;
     font-weight: bold;
     color: #FF0000;
     margin: 10px 0;
 }
 
-.botao-ponto {
-    background-color: #FF0000;
-    color: #000; /* Texto preto em botões vermelhos */
+.controles-ponto {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.botao-aumentar, .botao-diminuir {
     border: none;
-    padding: 10px 20px;
-    font-size: 1.1em;
+    padding: 1.5vw 1vw; /* Padding proporcional */
+    font-size: 1.1vw; 
     cursor: pointer;
     border-radius: 5px;
-    transition: background-color 0.3s;
     font-weight: bold;
+    flex-grow: 1;
+    transition: background-color 0.3s;
 }
 
-.botao-ponto:hover:not(.desabilitado) {
-    background-color: #e60000;
+.botao-aumentar {
+    background-color: #FF0000;
+    color: #000;
 }
 
+.botao-diminuir {
+    background-color: #333;
+    color: #fff;
+}
+
+/* --- Indicadores e Info Geral --- */
 .saque-indicador {
     position: absolute;
-    top: 5px;
-    left: 5px;
+    top: 10px;
+    left: 10px;
     background-color: #FF0000;
     color: #000; 
     padding: 5px 10px;
     border-radius: 5px;
     font-weight: bold;
-    font-size: 0.8em;
+    font-size: 0.9em;
     display: none;
 }
 
-.saque {
-    display: block !important;
-}
-
 #info-geral {
-    margin-top: 30px;
-    padding: 15px;
+    margin-top: 3vw;
+    padding: 2vw;
     background-color: #0a0a0a;
     border-radius: 5px;
+    text-align: center;
 }
 
-#info-geral button {
-    margin-top: 10px;
-    background-color: #555;
-    color: #fff;
-    border: none;
-    padding: 8px 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-#info-geral button:hover {
-    background-color: #777;
-}
-
-/* --- Estado Desabilitado --- */
-.desabilitado {
-    pointer-events: none;
-    opacity: 0.5; 
-}
-
-/* --- Área de Regras e Penalidades --- */
-#regras-section li, .detalhe-penalidade {
-    background-color: #222;
-    color: #fff; /* Garante texto branco */
-}
-
-#regras-section li {
-    margin: 10px 0;
-    padding: 10px;
-    border-left: 5px solid #FF0000;
-    border-radius: 3px;
-}
-
+/* --- Regras e Penalidades --- */
 #select-penalidade {
     padding: 10px;
     font-size: 1em;
     margin: 15px 0;
-    width: 80%;
-    max-width: 400px;
+    width: 90%; /* Usa porcentagem da área */
+    max-width: 500px;
     background-color: #333;
-    color: #fff; /* Texto branco no dropdown */
+    color: #fff;
     border: 1px solid #FF0000;
     border-radius: 5px;
-}
-
-.detalhe-penalidade {
-    margin-top: 20px;
-    padding: 15px;
-    text-align: left;
-    background-color: #0a0a0a;
-    border: 1px solid #FF0000;
-    min-height: 100px;
-}
-
-/* --- Overlay de Vencedor (Pausa) --- */
-#overlay-vencedor {
-    display: none; 
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-#overlay-vencedor.ativo {
-    display: flex;
-}
-
-#mensagem-vencedor {
-    background-color: #111;
-    border: 5px solid #FF0000;
-    padding: 40px 60px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
-    color: #fff; /* Texto branco no overlay */
-}
-
-#mensagem-vencedor h2 {
-    font-size: 2.5em;
-    color: #FF0000;
-    margin-bottom: 20px;
-}
-
-#contador-tempo {
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #fff;
 }
 
 /* --- Rodapé --- */
 footer {
     width: 100%;
     text-align: center;
-    padding: 10px 0;
+    padding: 1vh 0;
     background-color: #1a1a1a;
-    margin-top: 20px;
     border-top: 1px solid #FF0000;
-    color: #fff; /* Texto branco no rodapé */
+    color: #fff;
+    margin-top: auto; /* Empurra o rodapé para baixo */
+}
+
+/* --- MEDIA QUERIES PARA RESPONSIVIDADE EM TELAS MENORES (Ex: Celulares) --- */
+@media (max-width: 768px) {
+    
+    /* Placar se torna vertical */
+    #placar {
+        flex-direction: column;
+    }
+
+    .time {
+        width: 100%; /* Ocupa a largura total */
+        margin-bottom: 20px;
+    }
+
+    /* Reduz o tamanho de fontes que usam vw em telas pequenas */
+    h1 {
+        font-size: 8vw;
+    }
+
+    .pontuacao {
+        font-size: 15vw;
+    }
+
+    .botao-aumentar, .botao-diminuir {
+        font-size: 4vw; /* Aumenta o tamanho dos botões para serem clicáveis */
+        padding: 3vw 2vw;
+    }
 }

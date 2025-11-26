@@ -3,12 +3,11 @@ index.html
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <title>Marcação e Pontuação de Vôlei</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
     <div id="overlay-vencedor">
         <div id="mensagem-vencedor">
             <h2>🏆 <span id="time-vencedor">Time Vencedor</span> Ganhou o Set! 🏆</h2>
@@ -29,7 +28,12 @@ index.html
                     <h3>Time A</h3>
                     <p class="pontuacao-label">Pontos:</p>
                     <span class="pontuacao" id="pontosA">0</span>
-                    <button class="botao-ponto" onclick="marcarPonto('A')">+1 Ponto</button>
+                    
+                    <div class="controles-ponto">
+                        <button class="botao-diminuir" onclick="diminuirPonto('A')">-1 Ponto</button>
+                        <button class="botao-aumentar" onclick="marcarPonto('A')">+1 Ponto</button>
+                    </div>
+                    
                     <div class="saque-indicador" id="saqueA">Saque</div>
                 </div>
 
@@ -37,7 +41,12 @@ index.html
                     <h3>Time B</h3>
                     <p class="pontuacao-label">Pontos:</p>
                     <span class="pontuacao" id="pontosB">0</span>
-                    <button class="botao-ponto" onclick="marcarPonto('B')">+1 Ponto</button>
+                    
+                    <div class="controles-ponto">
+                        <button class="botao-diminuir" onclick="diminuirPonto('B')">-1 Ponto</button>
+                        <button class="botao-aumentar" onclick="marcarPonto('B')">+1 Ponto</button>
+                    </div>
+                    
                     <div class="saque-indicador" id="saqueB">Saque</div>
                 </div>
 

@@ -6,9 +6,11 @@ let setsA = 0;
 let setsB = 0;
 let setAtual = 1;
 let saque = 'A'; // 'A' ou 'B'
-let cronometroId = null; // Para controlar o intervalo do cronômetro
+let cronometroId = null; 
+// Armazena o último time que marcou o ponto (útil para correção manual do saque)
+let ultimoPontoMarcado = 'A'; 
 
-// ELEMENTOS DO DOM (DECLARAÇÃO CONSOLIDADA)
+// ELEMENTOS DO DOM
 const DOM = {
     pontosA: document.getElementById('pontosA'),
     pontosB: document.getElementById('pontosB'),
@@ -20,7 +22,8 @@ const DOM = {
     overlay: document.getElementById('overlay-vencedor'),
     timeVencedor: document.getElementById('time-vencedor'),
     contadorTempo: document.getElementById('contador-tempo'),
-    botoesPonto: document.querySelectorAll('.botao-ponto'),
+    // Seleciona botões de AUMENTAR e DIMINUIR
+    botoesPonto: document.querySelectorAll('.botao-aumentar, .botao-diminuir'), 
     detalhePenalidade: document.getElementById('detalhe-penalidade'),
     selectPenalidade: document.getElementById('select-penalidade')
 };
@@ -50,33 +53,14 @@ const regrasPenalidades = {
 };
 
 // ------------------------------------
-// FUNÇÕES DE CONTROLE DE INTERFACE (UI)
+// FUNÇÕES DE CONTROLE DE PONTUAÇÃO
 // ------------------------------------
 
-function atualizarSaque() {
-    DOM.saqueA.classList.remove('saque');
-    DOM.saqueB.classList.remove('saque');
-    if (saque === 'A') {
-        DOM.saqueA.classList.add('saque');
-    } else {
-        DOM.saqueB.classList.add('saque');
-    }
-}
-
-function setBotoesHabilitados(habilitado) {
-    const acao = habilitado ? 'remove' : 'add';
-    DOM.botoesPonto.forEach(botao => {
-        botao.classList[acao]('desabilitado');
-    });
-}
-
-// ------------------------------------
-// LÓGICA DE JOGO
-// ------------------------------------
-
-// Chamada pelo botão no HTML
+/**
+ * Adiciona um ponto ao time especificado e ajusta o saque (Rally Point).
+ * @param {string} time - 'A' ou 'B'.
+ */
 function marcarPonto(time) {
-    // 1. Marca o ponto e atualiza o DOM
     if (time === 'A') {
         pontosA++;
         DOM.pontosA.textContent = pontosA;
@@ -85,11 +69,33 @@ function marcarPonto(time) {
         DOM.pontosB.textContent = pontosB;
     }
     
-    // 2. O time que marcou o ponto ganha o saque (Regra Rally Point)
+    // O time que marcou o ponto ganha/mantém o saque
     saque = time;
+    ultimoPontoMarcado = time;
     atualizarSaque();
 
-    // 3. Verifica Fim de Set
+    verificarFimDeSet();
+}
+
+/**
+ * Remove um ponto do time especificado.
+ * O saque não muda, pois presume-se que é uma correção manual.
+ * @param {string} time - 'A' ou 'B'.
+ */
+function diminuirPonto(time) {
+    // Garante que o ponto não seja negativo
+    if (time === 'A' && pontosA > 0) {
+        pontosA--;
+        DOM.pontosA.textContent = pontosA;
+    } else if (time === 'B' && pontosB > 0) {
+        pontosB--;
+        DOM.pontosB.textContent = pontosB;
+    }
+    
+    // O saque permanece com o último time que marcou o ponto (ou seja, não altera o saque)
+    atualizarSaque();
+    
+    // Verifica se a correção afetou o fim do set
     verificarFimDeSet();
 }
 
@@ -113,10 +119,31 @@ function verificarFimDeSet() {
     }
 }
 
+// ------------------------------------
+// FUNÇÕES DE PAUSA E CONTROLE DE ESTADO
+// ------------------------------------
+
+function atualizarSaque() {
+    DOM.saqueA.classList.remove('saque');
+    DOM.saqueB.classList.remove('saque');
+    if (saque === 'A') {
+        DOM.saqueA.classList.add('saque');
+    } else {
+        DOM.saqueB.classList.add('saque');
+    }
+}
+
+function setBotoesHabilitados(habilitado) {
+    const acao = habilitado ? 'remove' : 'add';
+    DOM.botoesPonto.forEach(botao => {
+        botao.classList[acao]('desabilitado');
+    });
+}
+
 function iniciarPausaOuFimDeJogo(vencedor) {
     DOM.timeVencedor.textContent = vencedor;
     
-    // Verifica Fim de Jogo
+    // Verifica se é Fim de Jogo (Melhor de 5 sets)
     if (setsA === 3 || setsB === 3) {
         const vencedorPartida = setsA === 3 ? 'Time A' : 'Time B';
         DOM.timeVencedor.textContent = `PARABÉNS! ${vencedorPartida} Venceu o JOGO!`;
@@ -126,12 +153,12 @@ function iniciarPausaOuFimDeJogo(vencedor) {
         setBotoesHabilitados(false);
 
     } else {
+        // Pausa de 2 minutos entre sets
         alert(`FIM DO SET ${setAtual}! ${vencedor} venceu.`);
         iniciarCronometroPausa();
     }
 }
 
-// Lógica de cronômetro e pausa de 2 minutos
 function iniciarCronometroPausa() {
     const TEMPO_PAUSA_MS = 120 * 1000; // 2 minutos
     let tempoRestante = TEMPO_PAUSA_MS;
@@ -139,7 +166,6 @@ function iniciarCronometroPausa() {
     setBotoesHabilitados(false);
     DOM.overlay.classList.add('ativo');
 
-    // Função auxiliar para formatar 00:00
     const formatarTempo = (ms) => {
         const minutos = Math.floor(ms / 60000);
         const segundos = Math.floor((ms % 60000) / 1000);
@@ -148,7 +174,6 @@ function iniciarCronometroPausa() {
 
     DOM.contadorTempo.textContent = `Reiniciando em ${formatarTempo(tempoRestante)}...`;
 
-    // Limpa qualquer cronômetro anterior
     if (cronometroId) {
         clearInterval(cronometroId);
     }
@@ -172,28 +197,28 @@ function finalizarPausa() {
 }
 
 function iniciarNovoSet() {
-    // 1. Inicia o próximo set
     setAtual++;
     DOM.setAtual.textContent = setAtual;
     
-    // 2. Zera os pontos
     pontosA = 0;
     pontosB = 0;
     DOM.pontosA.textContent = pontosA;
     DOM.pontosB.textContent = pontosB;
 
-    // 3. Alterna o primeiro saque do novo set
+    // Alterna o saque inicial do novo set
     saque = (saque === 'A') ? 'B' : 'A'; 
+    ultimoPontoMarcado = saque; // O primeiro saque define o último ponto marcado
     atualizarSaque();
 }
 
-// Chamada pelo botão no HTML
+/**
+ * Reseta todos os placares e estados do jogo.
+ */
 function resetarPlacar(jogoTerminado = false) {
     if (!jogoTerminado && !confirm('Tem certeza que deseja resetar todo o placar e sets?')) {
         return;
     }
     
-    // Para o cronômetro, se estiver ativo
     if (cronometroId) {
         clearInterval(cronometroId);
         cronometroId = null;
@@ -206,6 +231,7 @@ function resetarPlacar(jogoTerminado = false) {
     setsB = 0;
     setAtual = 1;
     saque = 'A'; 
+    ultimoPontoMarcado = 'A'; 
 
     // Atualiza a interface
     DOM.pontosA.textContent = pontosA;
@@ -214,7 +240,6 @@ function resetarPlacar(jogoTerminado = false) {
     DOM.setsB.textContent = setsB;
     DOM.setAtual.textContent = setAtual;
     
-    // Garante que o overlay seja fechado e botões habilitados
     DOM.overlay.classList.remove('ativo');
     setBotoesHabilitados(true);
 
@@ -244,10 +269,9 @@ function mostrarDetalhePenalidade() {
     }
 }
 
-// Inicialização
+// Inicialização e Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
     atualizarSaque();
     mostrarDetalhePenalidade(); 
-    // Adiciona o listener de mudança ao select
     DOM.selectPenalidade.addEventListener('change', mostrarDetalhePenalidade);
 });
