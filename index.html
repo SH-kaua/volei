@@ -6,7 +6,6 @@ index.html
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Placar de Vôlei PRO</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
 
@@ -19,8 +18,8 @@ index.html
         <div class="team-name" contenteditable spellcheck="false">Time A</div>
         <div class="score" id="scoreA">0</div>
         <div class="buttons">
-          <button onclick="addPoint('A', 1)" class="add">+</button>
-          <button onclick="addPoint('A', -1)" class="sub">-</button>
+          <button onclick="addPoint('A', 1)" class="add">+1</button>
+          <button onclick="addPoint('A', -1)" class="sub">-1</button>
         </div>
       </div>
 
@@ -28,36 +27,38 @@ index.html
         <div class="team-name" contenteditable spellcheck="false">Time B</div>
         <div class="score" id="scoreB">0</div>
         <div class="buttons">
-          <button onclick="addPoint('B', 1)" class="add">+</button>
-          <button onclick="addPoint('B', -1)" class="sub">-</button>
+          <button onclick="addPoint('B', 1)" class="add">+1</button>
+          <button onclick="addPoint('B', -1)" class="sub">-1</button>
         </div>
       </div>
     </div>
 
     <div class="sets">
-      Sets: <span id="setsA">0</span> × <span id="setsB">0</span>
+      Sets conquistados: <span id="setsA">0</span> × <span id="setsB">0</span>
       <div class="set-buttons">
-        <button onclick="declareSet('A')">Time A ganhou set</button>
-        <button onclick="declareSet('B')">Time B ganhou set</button>
-        <button class="secondary" onclick="resetSet()">Zerar set</button>
-        <button class="secondary" onclick="resetAll()">Novo jogo</button>
+        <button onclick="declararSet('A')">Time A ganhou o set</button>
+        <button onclick="declararSet('B')">Time B ganhou o set</button>
+        <button class="secondary" onclick="zerarSet()">Zerar set atual</button>
+        <button class="secondary" onclick="novoJogo()">Novo jogo</button>
       </div>
     </div>
 
     <div class="rules">
-      <h2>Regras Oficiais do Vôlei</h2>
+      <h2>Regras Oficiais do Vôlei (FIVB)</h2>
       <ul>
-        <li>Melhor de 5 sets</li>
-        <li>1º a 4º set: 25 pontos (mínimo 2 de diferença)</li>
+        <li>Partida em melhor de 5 sets</li>
+        <li>Sets 1 a 4: 25 pontos (mínimo 2 de diferença)</li>
         <li>5º set (tie-break): 15 pontos (mínimo 2 de diferença)</li>
-        <li>6 substituições e 2 tempos por set</li>
-        <li>Líbero não ataca nem bloqueia acima da rede</li>
+        <li>Cada time tem 6 substituições e 2 tempos técnicos por set</li>
+        <li>Líbero não pode atacar nem bloquear acima da rede</li>
+        <li>Toque na rede é falta (exceto se a bola empurrar a rede)</li>
+        <li>Saque pode tocar a rede e passar (válido)</li>
       </ul>
     </div>
 
   </div>
 
-  <footer>Placar de Vôlei PRO • 2025</footer>
+  <footer>Placar de Vôlei PRO • Preto & Vermelho • 2025</footer>
 
   <script src="script.js"></script>
 </body>

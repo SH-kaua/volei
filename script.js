@@ -1,80 +1,84 @@
 script.js
-const pointSound = new Audio('sounds/point.mp3');
-const penaltySound = new Audio('sounds/penalty.mp3');
+// Sons
+const somPonto = new Audio('sounds/ponto.mp3');
+const somPenalidade = new Audio('sounds/penalidade.mp3');
 
-let scoreA = 0, scoreB = 0, setsA = 0, setsB = 0;
+let pontosA = 0, pontosB = 0, setsA = 0, setsB = 0;
 
-function playSound(type) {
-  const sound = type === 'add' ? pointSound : penaltySound;
-  sound.currentTime = 0;
-  sound.play().catch(() => {}); // ignora erro se usuário não interagiu ainda
+function tocarSom(tipo) {
+  const som = tipo === 'ponto' ? somPonto : somPenalidade;
+  som.currentTime = 0;
+  som.play().catch(() => {}); // evita erro se ainda não houve interação
 }
 
-function addPoint(team, value) {
-  playSound(value > 0 ? 'add' : 'sub');
+function addPoint(time, valor) {
+  tocarSom(valor > 0 ? 'ponto' : 'penalidade');
 
-  if (team === 'A') {
-    scoreA = Math.max(0, scoreA + value);
-    document.getElementById('scoreA').textContent = scoreA;
+  if (time === 'A') {
+    pontosA = Math.max(0, pontosA + valor);
+    document.getElementById('scoreA').textContent = pontosA;
   } else {
-    scoreB = Math.max(0, scoreB + value);
-    document.getElementById('scoreB').textContent = scoreB;
+    pontosB = Math.max(0, pontosB + valor);
+    document.getElementById('scoreB').textContent = pontosB;
   }
 }
 
-function checkSetWinner() {
-  const isTiebreak = setsA + setsB === 4;
-  const min = isTiebreak ? 15 : 25;
-  const diff = Math.abs(scoreA - scoreB);
+function verificarVencedorSet() {
+  const tiebreak = setsA + setsB === 4;
+  const minimo = tiebreak ? 15 : 25;
+  const diferenca = Math.abs(pontosA - pontosB);
 
-  if ((scoreA >= min || scoreB >= min) && diff >= 2) {
-    return scoreA > scoreB ? 'A' : 'B';
+  if ((pontosA >= minimo || pontosB >= minimo) && diferenca >= 2) {
+    return pontosA > pontosB ? 'A' : 'B';
   }
   return null;
 }
 
-function declareSet(winner) {
-  const actualWinner = checkSetWinner();
+function declararSet(vencedor) {
+  const realVencedor = verificarVencedorSet();
 
-  if (!actualWinner) {
-    alert(`Set ainda não acabou!\nPrecisa de ${setsA + setsB === 4 ? 15 : 25} pontos com 2+ de vantagem.`);
+  if (!realVencedor) {
+    alert(`O set ainda não terminou!\nÉ preciso ${setsA + setsB === 4 ? '15' : '25'} pontos com no mínimo 2 de vantagem.`);
     return;
   }
 
-  if (actualWinner !== winner) {
-    if (!confirm(`O placar indica vitória do Time ${actualWinner}.\nMesmo assim dar o set ao Time ${winner}?`)) return;
+  if (realVencedor !== vencedor) {
+    if (!confirm(`O placar mostra que o Time ${realVencedor} está ganhando.\nMesmo assim dar o set para o Time ${vencedor}?`)) {
+      return;
+    }
   }
 
-  if (winner === 'A') setsA++; else setsB++;
+  if (vencedor === 'A') setsA++; else setsB++;
   document.getElementById('setsA').textContent = setsA;
   document.getElementById('setsB').textContent = setsB;
 
-  alert(`TIME ${winner} VENCEU O SET!\nPlacar: ${setsA} × ${setsB}`);
+  alert(`TIME ${vencedor} VENCEU O SET!\nPlacar de sets: ${setsA} × ${setsB}`);
 
-  // Reset set
-  scoreA = scoreB = 0;
+  // Zera o set atual
+  pontosA = pontosB = 0;
   document.getElementById('scoreA').textContent = '0';
   document.getElementById('scoreB').textContent = '0';
 
-  // Campeão
-  if (setsA === 3 || setsB === 3) {
-    setTimeout(() => {
-      alert(`PARABÉNS! TIME ${setsA === 3 ? 'A' : 'B'} É O CAMPEÃO DA PARTIDA!`);
-    }, 400);
+  // Verifica campeão da partida
+  if (setsA === 3) {
+    setTimeout(() => alert("PARABÉNS! TIME A É O CAMPEÃO DA PARTIDA!"), 500);
+  }
+  if (setsB === 3) {
+    setTimeout(() => alert("PARABÉNS! TIME B É O CAMPEÃO DA PARTIDA!"), 500);
   }
 }
 
-function resetSet() {
+function zerarSet() {
   if (confirm('Zerar apenas o set atual?')) {
-    scoreA = scoreB = 0;
+    pontosA = pontosB = 0;
     document.getElementById('scoreA').textContent = '0';
     document.getElementById('scoreB').textContent = '0';
   }
 }
 
-function resetAll() {
-  if (confirm('Iniciar NOVO JOGO?\nTodo o placar será zerado.')) {
-    scoreA = scoreB = setsA = setsB = 0;
+function novoJogo() {
+  if (confirm('Começar um NOVO JOGO?\nTodo o placar será zerado.')) {
+    pontosA = pontosB = setsA = setsB = 0;
     document.getElementById('scoreA').textContent = '0';
     document.getElementById('scoreB').textContent = '0';
     document.getElementById('setsA').textContent = '0';

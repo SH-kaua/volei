@@ -16,13 +16,7 @@ header {
 }
 .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
 
-.teams {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  flex-wrap: wrap;
-  margin: 40px 0;
-}
+.teams { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin: 40px 0; }
 .team {
   background: #111;
   padding: 40px 30px;
@@ -55,32 +49,29 @@ header {
   margin-top: 20px;
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 25px;
 }
 button {
-  width: 90px;
-  height: 90px;
+  width: 100px;
+  height: 100px;
   border: none;
   border-radius: 50%;
-  font-size: 3em;
+  font-size: 2.5em;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
 }
 button.add { background: #c00; }
 button.sub { background: #900; }
-button:hover { transform: scale(1.15); box-shadow: 0 0 20px #f00; }
+button:hover { transform: scale(1.18); box-shadow: 0 0 30px #f00; }
 
-.sets {
-  font-size: 2em;
-  margin: 50px 0;
-}
+.sets { font-size: 2em; margin: 50px 0; }
 .sets span {
   background: #c00;
-  padding: 12px 30px;
+  padding: 12px 35px;
   border-radius: 12px;
-  min-width: 70px;
+  min-width: 80px;
   display: inline-block;
   font-weight: bold;
 }
@@ -88,36 +79,28 @@ button:hover { transform: scale(1.15); box-shadow: 0 0 20px #f00; }
   width: auto;
   height: auto;
   border-radius: 12px;
-  padding: 14px 24px;
-  margin: 10px;
-  font-size: 1.1em;
+  padding: 14px 28px;
+  margin: 12px 8px;
+  font-size: 1.15em;
 }
-.set-buttons .secondary {
-  background: #444;
-}
+.set-buttons .secondary { background: #444; }
 
 .rules {
   background: #111;
-  padding: 35px;
-  margin: 50px auto;
+  padding: 40px;
+  margin: 60px auto;
   max-width: 900px;
-  border: 2px solid #c00;
-  border-radius: 15px;
+  border: 3px solid #c00;
+  border-radius: 18px;
   text-align: left;
+  line-height: 2;
 }
 .rules h2 {
   text-align: center;
   color: #f00;
-  font-size: 2.4em;
-  margin-bottom: 25px;
+  font-size: 2.5em;
+  margin-bottom: 30px;
 }
-.rules ul { line-height: 2; font-size: 1.2em; }
-.rules li::before { content: "Volleyball "; color: #c00; }
+.rules li::before { content: "Volleyball "; color: #c00; font-size: 1.1em; }
 
-footer {
-  padding: 25px;
-  background: #111;
-  margin-top: 60px;
-  font-size: 0.9em;
-  opacity: 0.8;
-}
+footer { padding: 30px; background: #111; margin-top: 80px; opacity: 0.9; }
