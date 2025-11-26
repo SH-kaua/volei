@@ -1,65 +1,147 @@
 index.html
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Placar de Vôlei PRO</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScoreVôlei - Sistema de Pontuação</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <header>PLACAR DE VÔLEI</header>
-
-  <div class="container">
-
-    <div class="teams">
-      <div class="team">
-        <div class="team-name" contenteditable spellcheck="false">Time A</div>
-        <div class="score" id="scoreA">0</div>
-        <div class="buttons">
-          <button onclick="addPoint('A', 1)" class="add">+1</button>
-          <button onclick="addPoint('A', -1)" class="sub">-1</button>
+    <header>
+        <h1>ScoreVôlei</h1>
+        <p>Sistema de Marcação e Pontuação de Vôlei</p>
+    </header>
+    
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" data-tab="score">Placar</button>
+            <button class="tab" data-tab="rules">Regras</button>
+            <button class="tab" data-tab="history">Histórico</button>
         </div>
-      </div>
-
-      <div class="team">
-        <div class="team-name" contenteditable spellcheck="false">Time B</div>
-        <div class="score" id="scoreB">0</div>
-        <div class="buttons">
-          <button onclick="addPoint('B', 1)" class="add">+1</button>
-          <button onclick="addPoint('B', -1)" class="sub">-1</button>
+        
+        <div id="score" class="tab-content active">
+            <div class="match-info">
+                <div class="team-input">
+                    <label for="team1-name">Time A:</label>
+                    <input type="text" id="team1-name" value="Time A">
+                </div>
+                <div class="set-info">
+                    <span>Set: <span id="current-set">1</span></span>
+                </div>
+                <div class="team-input">
+                    <label for="team2-name">Time B:</label>
+                    <input type="text" id="team2-name" value="Time B">
+                </div>
+            </div>
+            
+            <div class="scoreboard">
+                <div class="team" id="team1">
+                    <h2 id="team1-title">Time A</h2>
+                    <div class="score" id="score1">0</div>
+                    <div class="sets" id="sets1">
+                        <div class="set">1</div>
+                        <div class="set">2</div>
+                        <div class="set">3</div>
+                        <div class="set">4</div>
+                        <div class="set">5</div>
+                    </div>
+                    <div class="controls">
+                        <button onclick="addPoint(1)">+ Ponto</button>
+                        <button onclick="removePoint(1)">- Ponto</button>
+                    </div>
+                </div>
+                
+                <div class="vs">VS</div>
+                
+                <div class="team" id="team2">
+                    <h2 id="team2-title">Time B</h2>
+                    <div class="score" id="score2">0</div>
+                    <div class="sets" id="sets2">
+                        <div class="set">1</div>
+                        <div class="set">2</div>
+                        <div class="set">3</div>
+                        <div class="set">4</div>
+                        <div class="set">5</div>
+                    </div>
+                    <div class="controls">
+                        <button onclick="addPoint(2)">+ Ponto</button>
+                        <button onclick="removePoint(2)">- Ponto</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="game-controls">
+                <button class="reset-btn" onclick="resetSet()">Reiniciar Set</button>
+                <button class="reset-btn" onclick="resetGame()">Reiniciar Jogo</button>
+                <button class="new-game-btn" onclick="newGame()">Novo Jogo</button>
+            </div>
         </div>
-      </div>
+        
+        <div id="rules" class="tab-content">
+            <h2>Regras do Vôlei</h2>
+            
+            <div class="rules-container">
+                <div class="rule-category">
+                    <h3>Objetivo do Jogo</h3>
+                    <p>O objetivo do vôlei é fazer a bola tocar o chão da quadra adversária, passando por cima da rede, e impedir que o mesmo aconteça no próprio campo.</p>
+                </div>
+                
+                <div class="rule-category">
+                    <h3>Pontuação</h3>
+                    <ul>
+                        <li>Um set é vencido pelo time que primeiro alcançar 25 pontos, com uma diferença mínima de 2 pontos.</li>
+                        <li>O jogo é disputado em melhor de 5 sets (vencendo quem fizer 3 sets primeiro).</li>
+                        <li>No 5º set (se necessário), o placar vai apenas até 15 pontos, mas mantém a necessidade de 2 pontos de diferença.</li>
+                    </ul>
+                </div>
+                
+                <div class="rule-category">
+                    <h3>Fundamentos Básicos</h3>
+                    <ul>
+                        <li><strong>Saque:</strong> Inicia o jogo, deve ser feito atrás da linha de fundo.</li>
+                        <li><strong>Recepção:</strong> Defesa do saque adversário.</li>
+                        <li><strong>Levantamento:</strong> Preparação para o ataque.</li>
+                        <li><strong>Ataque:</strong> Tentativa de marcar ponto.</li>
+                        <li><strong>Bloqueio:</strong> Defesa junto à rede para impedir o ataque.</li>
+                        <li><strong>Defesa:</strong> Proteção do campo após o ataque adversário.</li>
+                    </ul>
+                </div>
+                
+                <div class="rule-category">
+                    <h3>Faltas Comuns</h3>
+                    <ul>
+                        <li>Dois toques consecutivos pelo mesmo jogador (exceto no bloqueio)</li>
+                        <li>Quatro toques na bola pela mesma equipe</li>
+                        <li>Toque apoiado (segurar ou carregar a bola)</li>
+                        <li>Invasão do campo adversário</li>
+                        <li>Tocar a rede durante a jogada</li>
+                        <li>Saque inválido (pisar na linha ou fora da área de saque)</li>
+                    </ul>
+                </div>
+                
+                <div class="rule-category">
+                    <h3>Rotação</h3>
+                    <p>Os jogadores devem rodar no sentido horário a cada vez que sua equipe recupera o saque. A formação inicial determina a ordem de rotação, que deve ser mantida durante o set.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="history" class="tab-content">
+            <h2>Histórico de Partidas</h2>
+            <div class="history-controls">
+                <button onclick="clearHistory()">Limpar Histórico</button>
+            </div>
+            <div id="match-history" class="match-history">
+                <!-- Histórico será preenchido via JavaScript -->
+            </div>
+        </div>
     </div>
+    
+    <footer>
+        <p>ScoreVôlei &copy; 2023 - Sistema de Marcação de Vôlei</p>
+    </footer>
 
-    <div class="sets">
-      Sets conquistados: <span id="setsA">0</span> × <span id="setsB">0</span>
-      <div class="set-buttons">
-        <button onclick="declararSet('A')">Time A ganhou o set</button>
-        <button onclick="declararSet('B')">Time B ganhou o set</button>
-        <button class="secondary" onclick="zerarSet()">Zerar set atual</button>
-        <button class="secondary" onclick="novoJogo()">Novo jogo</button>
-      </div>
-    </div>
-
-    <div class="rules">
-      <h2>Regras Oficiais do Vôlei (FIVB)</h2>
-      <ul>
-        <li>Partida em melhor de 5 sets</li>
-        <li>Sets 1 a 4: 25 pontos (mínimo 2 de diferença)</li>
-        <li>5º set (tie-break): 15 pontos (mínimo 2 de diferença)</li>
-        <li>Cada time tem 6 substituições e 2 tempos técnicos por set</li>
-        <li>Líbero não pode atacar nem bloquear acima da rede</li>
-        <li>Toque na rede é falta (exceto se a bola empurrar a rede)</li>
-        <li>Saque pode tocar a rede e passar (válido)</li>
-      </ul>
-    </div>
-
-  </div>
-
-  <footer>Placar de Vôlei PRO • Preto & Vermelho • 2025</footer>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
